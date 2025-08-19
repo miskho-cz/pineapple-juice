@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chat with Yourself</title>
+    <title>Multi-User Chat</title>
+    <script src="/socket.io/socket.io.js"></script> <!-- Include Socket.IO -->
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -73,6 +74,8 @@
     </div>
 
     <script>
+        const socket = io();  // Initialize socket connection
+
         function sendMessage() {
             const userInput = document.getElementById('userInput').value;
             if (!userInput.trim()) return; // Don't send empty messages
@@ -87,20 +90,24 @@
             // Scroll to the bottom of the chat container
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
+            // Emit the message to the server
+            socket.emit('chat message', userInput);
+
             // Clear input field
             document.getElementById('userInput').value = '';
-
-            // Simulate system reply (your own response)
-            setTimeout(() => {
-                const systemMessage = document.createElement('div');
-                systemMessage.classList.add('message', 'system');
-                systemMessage.innerText = userInput;
-                chatContainer.appendChild(systemMessage);
-
-                // Scroll to the bottom of the chat container
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }, 500);
         }
+
+        // Listen for incoming messages from the server
+        socket.on('chat message', (msg) => {
+            const chatContainer = document.getElementById('chat-container');
+            const systemMessage = document.createElement('div');
+            systemMessage.classList.add('message', 'system');
+            systemMessage.innerText = msg;
+            chatContainer.appendChild(systemMessage);
+
+            // Scroll to the bottom of the chat container
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        });
 
         // Allow pressing Enter to send message
         document.getElementById('userInput').addEventListener('keypress', function (e) {
