@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Yourself</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            justify-content: space-between;
+        }
+        #chat-container {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+            background-color: #f7f7f7;
+        }
+        #chat-container .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #e0e0e0;
+            max-width: 70%;
+        }
+        #chat-container .message.user {
+            background-color: #8c94ff;
+            align-self: flex-end;
+        }
+        #chat-container .message.system {
+            background-color: #d0d0d0;
+        }
+        #input-container {
+            display: flex;
+            padding: 10px;
+            background-color: #fff;
+            border-top: 1px solid #ccc;
+        }
+        #input-container input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        #input-container button {
+            margin-left: 10px;
+            padding: 10px;
+            border: none;
+            background-color: #5c6bc0;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #input-container button:hover {
+            background-color: #3f51b5;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="chat-container">
+        <!-- Messages will appear here -->
+    </div>
+
+    <div id="input-container">
+        <input type="text" id="userInput" placeholder="Type a message..." />
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const userInput = document.getElementById('userInput').value;
+            if (!userInput.trim()) return; // Don't send empty messages
+
+            // Display user's message
+            const chatContainer = document.getElementById('chat-container');
+            const userMessage = document.createElement('div');
+            userMessage.classList.add('message', 'user');
+            userMessage.innerText = userInput;
+            chatContainer.appendChild(userMessage);
+
+            // Scroll to the bottom of the chat container
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // Clear input field
+            document.getElementById('userInput').value = '';
+
+            // Simulate system reply (your own response)
+            setTimeout(() => {
+                const systemMessage = document.createElement('div');
+                systemMessage.classList.add('message', 'system');
+                systemMessage.innerText = userInput;
+                chatContainer.appendChild(systemMessage);
+
+                // Scroll to the bottom of the chat container
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 500);
+        }
+
+        // Allow pressing Enter to send message
+        document.getElementById('userInput').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+
+</body>
+</html>
